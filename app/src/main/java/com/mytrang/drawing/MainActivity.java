@@ -24,17 +24,21 @@ public class MainActivity extends AppCompatActivity {
         drawingView = findViewById(R.id.drawing);
         name = findViewById(R.id.txt_name);
 
+//        float scale = getResources().getDisplayMetrics().density;
+//        name.setWidth((int) (name.getWidth() * scale));
+//        name.setHeight((int) (name.getHeight() * scale));
+
+
         nameKanji = name.getText().toString().trim();
         kanji = drawingView.getKanji();
         kanji.setName(nameKanji);
-        Log.w("List Kanji", kanji.toString());
 
         btncanvas = findViewById(R.id.buttonClear);
         btncanvas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawingView.clear();
-                Log.w("List Kanji", kanji.toString());
+                Log.w("List Kanji main", kanji.toString());
                 drawingView.clearKanji();
                 nameKanji = name.getText().toString().trim();
                 kanji = drawingView.getKanji();
