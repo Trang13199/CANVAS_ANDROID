@@ -37,4 +37,12 @@ public class DeviceDimensionsHelper {
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
     }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
 }

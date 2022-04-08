@@ -1,7 +1,9 @@
 package com.mytrang.drawing;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -24,10 +26,13 @@ public class MainActivity extends AppCompatActivity {
         drawingView = findViewById(R.id.drawing);
         name = findViewById(R.id.txt_name);
 
-//        float scale = getResources().getDisplayMetrics().density;
-//        name.setWidth((int) (name.getWidth() * scale));
-//        name.setHeight((int) (name.getHeight() * scale));
-
+        float scale = getResources().getDisplayMetrics().density;
+        float scaleText = getResources().getDisplayMetrics().scaledDensity;
+//        if (2.5 < scale && scale < 2.75) {
+        name.setTextSize(200 * scale / scaleText);
+//        } else {
+//            name.setTextSize(200);
+//        }
 
         nameKanji = name.getText().toString().trim();
         kanji = drawingView.getKanji();
@@ -45,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 kanji.setName(nameKanji);
             }
         });
+    }
+
+    public static int spToPx(float sp, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 }

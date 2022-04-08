@@ -20,9 +20,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SimpleDrawingView extends View {
     private final int paintColor = Color.GREEN;
 
@@ -34,7 +31,6 @@ public class SimpleDrawingView extends View {
     private int x1, x2, y1, y2;
     private int check = 0;
     private int i = 0;
-    private float scale;
     private KanjiStroke kanjiStroke;
     private Kanji kanji;
     private Point firstPoint, lastPoint;
@@ -44,8 +40,6 @@ public class SimpleDrawingView extends View {
     private Kanji kj;
 
     private Canvas canvas;
-    private List<Points> mpoint;
-
     private Path path;
 
     public SimpleDrawingView(Context context, @Nullable AttributeSet attrs) {
@@ -59,7 +53,6 @@ public class SimpleDrawingView extends View {
     private void setupPaint() {
         drawPaint = new Paint();
         path = new Path();
-//        mpoint = getListPoint();
         kanjiStroke = new KanjiStroke();
         kanji = new Kanji();
         kj = new Kanji();
@@ -67,35 +60,35 @@ public class SimpleDrawingView extends View {
 
         drawPaint.setColor(paintColor);
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth(10);
+        drawPaint.setStrokeWidth(20f);
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
-
-        scale = getResources().getDisplayMetrics().density;
-//        scale = getResources().getDisplayMetrics().scaledDensity;
 
 
         ks = kj.getKanjiStrokes().get(i);
         start = ks.getPointList().get(0);
         end = ks.getPointList().get(1);
 
-        x1 = (int) (start.x * scale);
-        y1 = (int) (start.y * scale);
-        x2 = (int) (end.x * scale);
-        y2 = (int) (end.y * scale);
+        x1 = convertdptopx(start.x);
+        y1 = convertdptopx(start.y);
+        x2 = convertdptopx(end.x);
+        y2 = convertdptopx(end.y);
 
+        redDot = Bitmap.createScaledBitmap(drawableToBitmap(R.drawable.red_dot), convertdptopx(10), convertdptopx(10), false);
+        greenDot = Bitmap.createScaledBitmap(drawableToBitmap(R.drawable.green_dot), convertdptopx(10), convertdptopx(10), false);
 
-//        Points p = mpoint.get(i);
-//        x1 = (int) (p.getX1() * scale);
-//        y1 = (int) (p.getY1() * scale);
-//        x2 = (int) (p.getX2() * scale);
-//        y2 = (int) (p.getY2() * scale);
+    }
 
-        redDot = Bitmap.createScaledBitmap(drawableToBitmap(R.drawable.red_dot), 10, 10, false);
-        greenDot = Bitmap.createScaledBitmap(drawableToBitmap(R.drawable.green_dot), 10, 10, false);
+    private int convertdptopx(int input) {
+        float scale = getResources().getDisplayMetrics().density;
+        return Math.round(input * scale);
+    }
 
+    private int convertpxtodp(int input) {
+        float scale = getResources().getDisplayMetrics().density;
+        return Math.round(input / scale);
     }
 
     @Override
@@ -104,8 +97,26 @@ public class SimpleDrawingView extends View {
 
         canvas.drawBitmap(greenDot, x1, y1, null);
         canvas.drawBitmap(redDot, x2, y2, null);
+//
+//        canvas.drawLine(0, 0, getWidth(), getHeight(), drawPaint);
+//        canvas.drawLine(getWidth(), 0, 0, getHeight(), drawPaint);
+//        canvas.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight(), drawPaint);
+//        canvas.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2, drawPaint);
 
-//        canvas.drawCircle(199*scale, 195*scale, 10, drawPaint);
+
+//        canvas.drawLine(convertdptopx(195), convertdptopx(245), convertdptopx(195), convertdptopx(155), drawPaint);
+//        canvas.drawLine(convertdptopx(245), convertdptopx(195), convertdptopx(155), convertdptopx(195), drawPaint);
+
+//        canvas.drawBitmap(redDot, convertdptopx(192-5), convertdptopx(177-5), null);
+//        canvas.drawBitmap(redDot, convertdptopx(248-5), convertdptopx(176-5), null);
+//        canvas.drawBitmap(redDot, convertdptopx(230), convertdptopx(127), null);
+//        canvas.drawBitmap(redDot, convertdptopx(158), convertdptopx(128), null);
+//        canvas.drawBitmap(redDot, convertdptopx(271), convertdptopx(195), null);
+//        canvas.drawBitmap(redDot, convertdptopx(267), convertdptopx(220), null);
+//        canvas.drawBitmap(redDot, convertdptopx(195), convertdptopx(228), null);
+//        canvas.drawBitmap(redDot, convertdptopx(195), convertdptopx(245), null);
+//        canvas.drawBitmap(redDot, convertdptopx(142), convertdptopx(245), null);
+
 
         canvas.drawBitmap(bitmap, 0, 0, canvasPaint);
         canvas.drawPath(path, drawPaint);
@@ -119,10 +130,10 @@ public class SimpleDrawingView extends View {
         float b = Math.abs(y - y1);
         if (a < 30 && b < 30) {
             check = 1;
-            Log.w("OK", "x1: " + x1 / scale + " - y1: " + y1 / scale + " - x2: " + x2 / scale + " - y2: " + y2 / scale);
+            Log.w("OK", "x1: " + convertpxtodp(x1) + " - y1: " + convertpxtodp(y1) + " - x2: " + convertpxtodp(x2) + " - y2: " + convertpxtodp(y2));
         } else {
             check = 0;
-            Log.w("NO", "x1: " + x1 / scale + " - y1: " + y1 / scale + " - x2: " + x2 / scale + " - y2: " + y2 / scale);
+            Log.w("NO", "x1: " + convertpxtodp(x1) + " - y1: " + convertpxtodp(y1) + " - x2: " + convertpxtodp(x2) + " - y2: " + convertpxtodp(y2));
         }
         Log.d("check", " " + check + "");
     }
@@ -134,31 +145,22 @@ public class SimpleDrawingView extends View {
         float b = Math.abs(y - y2);
         if (a < 30 && b < 30 && check == 1) {
             i++;
-            if (i < ks.getPointList().size()) {
+            if (i < kj.getKanjiStrokes().size()) {
                 ks = kj.getKanjiStrokes().get(i);
                 start = ks.getPointList().get(0);
                 end = ks.getPointList().get(1);
 
-                x1 = (int) (start.x * scale);
-                y1 = (int) (start.y * scale);
-                x2 = (int) (end.x * scale);
-                y2 = (int) (end.y * scale);
-//                if (i < mpoint.size()) {
-//                Points p = mpoint.get(i);
-//                x1 = (int) (p.getX1() * scale);
-//                y1 = (int) (p.getY1() * scale);
-//                x2 = (int) (p.getX2() * scale);
-//                y2 = (int) (p.getY2() * scale);
-                Log.d("Scale", " " + scale);
+                x1 = convertdptopx(start.x);
+                y1 = convertdptopx(start.y);
+                x2 = convertdptopx(end.x);
+                y2 = convertdptopx(end.y);
             } else {
             }
-            Log.d("Scale", " " + scale);
             check = 0;
-            Log.w("OK", "x1: " + x1 / scale + " - y1: " + y1 / scale + " - x2: " + x2 / scale + " - y2: " + y2 / scale);
+            Log.w("OK", "x1: " + convertpxtodp(x1) + " - y1: " + convertpxtodp(y1) + " - x2: " + convertpxtodp(x2) + " - y2: " + convertpxtodp(y2));
         } else {
             path.reset();
-            Log.d("Scale", " " + scale);
-            Log.w("NO", "x1: " + x1 / scale + " - y1: " + y1 / scale + " - x2: " + x2 / scale + " - y2: " + y2 / scale);
+            Log.w("NO", "x1: " + convertpxtodp(x1) + " - y1: " + convertpxtodp(y1) + " - x2: " + convertpxtodp(x2) + " - y2: " + convertpxtodp(y2));
         }
     }
 
@@ -170,18 +172,20 @@ public class SimpleDrawingView extends View {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 startTouch(X, Y);
-                firstPoint = new Point((int) (X / scale), (int) (Y / scale));
-                Log.e("start", "x:=" + X / scale + " y: " + Y / scale);
+                firstPoint = new Point(convertpxtodp((int) X - 10), convertpxtodp((int) Y - 10));
+                Log.e("start", "x:=" + convertpxtodp((int) X - 10) + " y:= " + convertpxtodp((int) Y - 10));
+                Log.d("density", getResources().getDisplayMetrics().scaledDensity + "");
+                Log.w("Scale", getResources().getDisplayMetrics().density + " ");
                 break;
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(X, Y);
                 break;
             case MotionEvent.ACTION_UP:
                 upTouch(X, Y);
-                lastPoint = new Point((int) (X / scale), (int) (Y / scale));
+                lastPoint = new Point(convertpxtodp((int) X - 10), convertpxtodp((int) Y - 10));
                 if (firstPoint.x == lastPoint.x && firstPoint.y == lastPoint.y) {
-                    Log.e("List Fail", " " + kanji.toString());
-                    Log.w("size", String.valueOf(kanji.getKanjiStrokes().size()));
+//                    Log.e("List Fail", " " + kanji.toString());
+//                    Log.w("size", String.valueOf(kanji.getKanjiStrokes().size()));
                     Toast.makeText(this.getContext(), "Please try again!!!", Toast.LENGTH_SHORT).show();
                 } else {
                     kanjiStroke.addPoint(firstPoint);
@@ -191,19 +195,17 @@ public class SimpleDrawingView extends View {
                     for (Point p : kanjiStroke.getPointList()) {
                         Log.e("point", p.toString());
                     }
-
-//                    Log.e("Stroke", kanjiStroke.toString());
                     kanji.addKanji(kanjiStroke);
                     Toast.makeText(this.getContext(), "Successful!!!", Toast.LENGTH_SHORT).show();
 
-                    Log.d("List Success", " " + kanji.toString());
-                    Log.w("size", String.valueOf(kanji.getKanjiStrokes().size()));
+//                    Log.d("List Success", " " + kanji.toString());
+//                    Log.w("size", String.valueOf(kanji.getKanjiStrokes().size()));
                     kanjiStroke = new KanjiStroke();
 
                 }
                 canvas.drawPath(path, drawPaint);
                 path.reset();
-                Log.e("end", "x:=" + X / scale + " y: " + Y / scale);
+                Log.e("end", "x:=" + convertpxtodp((int) X - 10) + " y:= " + convertpxtodp((int) Y - 10));
             default:
                 return false;
         }
@@ -219,15 +221,10 @@ public class SimpleDrawingView extends View {
         start = ks.getPointList().get(0);
         end = ks.getPointList().get(1);
 
-        x1 = (int) (start.x * scale);
-        y1 = (int) (start.y * scale);
-        x2 = (int) (end.x * scale);
-        y2 = (int) (end.y * scale);
-//        Points p = mpoint.get(i);
-//        x1 = (int) (p.getX1() * scale);
-//        y1 = (int) (p.getY1() * scale);
-//        x2 = (int) (p.getX2() * scale);
-//        y2 = (int) (p.getY2() * scale);
+        x1 = convertdptopx(start.x);
+        y1 = convertdptopx(start.y);
+        x2 = convertdptopx(end.x);
+        y2 = convertdptopx(end.y);
         invalidate();
     }
 
@@ -266,53 +263,25 @@ public class SimpleDrawingView extends View {
         return kanjiStroke;
     }
 
-    public List<Points> getListPoint() {
-        mpoint = new ArrayList<>();
-
-
-        //      1  Points p1 = new Points(120, 190, 270, 190);
-
-
-//  2      Points p1 = new Points(130, 150, 250, 150);
-//   2     Points p2 = new Points(120, 250, 270, 250);
-
-//        Points p1 = new Points(135, 115, 135, 295);
-//        Points p2 = new Points(135, 115, 250, 295);
-
-        Points p1 = new Points(110, 190, 280, 190);
-        Points p2 = new Points(190, 110, 190, 280);
-
-
-        Points p3 = new Points(135, 210, 250, 210);
-        Points p4 = new Points(135, 290, 250, 290);
-        mpoint.add(p1);
-        mpoint.add(p2);
-        mpoint.add(p3);
-        mpoint.add(p4);
-
-        return mpoint;
-    }
-
     public Kanji getListKanji() {
         KanjiStroke k = new KanjiStroke();
-//        k.addPoint(new Point(115, 187));
-//        k.addPoint(new Point(277, 187));
 
-
-        k.addPoint(new Point(139, 150));
-        k.addPoint(new Point(255, 150));
+        k.addPoint(new Point(146, 139));
+        k.addPoint(new Point(226, 131));
 
         KanjiStroke k1 = new KanjiStroke();
-//        k1.addPoint(new Point(195, 113));
-//        k1.addPoint(new Point(195, 285));
+        k1.addPoint(new Point(121, 195));
+        k1.addPoint(new Point(263, 184));
 
-        k1.addPoint(new Point(122, 250));
-        k1.addPoint(new Point(270, 250));
-
+        KanjiStroke k2 = new KanjiStroke();
+        k2.addPoint(new Point(184, 147));
+        k2.addPoint(new Point(246, 250));
 
         Kanji j = new Kanji();
         j.addKanji(k);
         j.addKanji(k1);
+        j.addKanji(k2);
+
         return j;
     }
 }

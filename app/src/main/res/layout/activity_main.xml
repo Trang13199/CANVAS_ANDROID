@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.mytrang.drawing.SimpleDrawingView
         android:id="@+id/drawing"
         android:layout_width="400dp"
@@ -19,15 +20,17 @@
     <TextView
         android:id="@+id/txt_name"
         android:layout_width="400dp"
-        android:gravity="center"
         android:layout_height="400dp"
-        android:text="ニ"
+        android:gravity="center"
+        android:text="モ"
+        app:fontFamily="@font/new_font"
+        android:autoSizeTextType="none"
         android:textSize="200sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
@@ -35,11 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Clear0"
+        android:text="Clear"
         app:layout_constraintBottom_toBottomOf="@+id/drawing"
         app:layout_constraintEnd_toEndOf="@+id/drawing"
         app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="@+id/drawing" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
