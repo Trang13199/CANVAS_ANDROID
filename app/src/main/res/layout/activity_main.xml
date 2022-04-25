@@ -22,7 +22,7 @@
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:gravity="center"
-        android:text="モ"
+        android:text="ミ"
         app:fontFamily="@font/new_font"
         android:autoSizeTextType="none"
         android:textSize="200sp"

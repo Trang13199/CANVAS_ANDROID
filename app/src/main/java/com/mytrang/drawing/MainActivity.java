@@ -28,11 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         float scale = getResources().getDisplayMetrics().density;
         float scaleText = getResources().getDisplayMetrics().scaledDensity;
-//        if (2.5 < scale && scale < 2.75) {
         name.setTextSize(200 * scale / scaleText);
-//        } else {
-//            name.setTextSize(200);
-//        }
 
         nameKanji = name.getText().toString().trim();
         kanji = drawingView.getKanji();
